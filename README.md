@@ -1,4 +1,4 @@
-### JMSC6116 In-class Exercises
+# JMSC6116 In-class Exercises
 This repository is a mirror of the JMSC6116 _Social media analytics for journalists_ In-class Exercises published on RPub.
 
 ## Index
