@@ -1,7 +1,7 @@
-# JMSC6116 In-class Exercises
+# In-class Exercises
 This repository is a mirror of the JMSC6116 _Social media analytics for journalists_ in-class exercises published on RPub.
 
-**Lecture 1 (Jan 17)** 
+**Lecture 1 (Jan 17)**
 * [A Deep Dive into Xi and Tsai’s Taiwan Speech (English)](https://elgarteo.github.io/JMSC6116/Lecture_1-taiwan_speech_english.html)
 * [A Deep Dive into Xi and Tsai’s Taiwan Speech (Chinese)](https://elgarteo.github.io/JMSC6116/Lecture_1-taiwan_speech_chinese.html)
 
@@ -16,3 +16,6 @@ This repository is a mirror of the JMSC6116 _Social media analytics for journali
 
 **Lecture 5 (Feb 28)**
 * [Text Mining: Tweet Mining and Web Scraping](https://fukingwa.github.io/JMSC6116-2020/lecture5_2020.html)
+
+**Lecture 6 (Mar 6)**
+* [2020 Democratic Party Presidential Primaries: A Sentiment Analysis](https://elgarteo.github.io/JMSC6116/Lecture_6-sentiment_analysis.html)
