@@ -27,7 +27,7 @@ This repository is a mirror of the JMSC6116 _Social media analytics for journali
 * [Network Analysis](https://fukingwa.github.io/JMSC6116-2020/lecture8_2020.html)
 
 **Lecture 9 (Apr 3)**
-* [Audience Analysis](https://rpubs.com/fukingwa/593936)
+* [Audience Analysis](https://elgarteo.github.io/JMSC6116/Lecture_9-audience_analysis.html)
 
 # Tutorials
 * [Installing R packages](https://elgarteo.github.io/JMSC6116/package/install_package.html)
