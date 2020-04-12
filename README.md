@@ -19,3 +19,16 @@ This repository is a mirror of the JMSC6116 _Social media analytics for journali
 
 **Lecture 6 (Mar 6)**
 * [2020 Democratic Party Presidential Primaries: A Sentiment Analysis](https://elgarteo.github.io/JMSC6116/Lecture_6-sentiment_analysis.html)
+
+**Lecture 7 (Mar 20)**
+* [Digital Map Marking](https://fukingwa.github.io/JMSC6116-2020/lecture7_2020.html)
+
+**Lecture 8 (Mar 27)**
+* [Network Analysis](https://fukingwa.github.io/JMSC6116-2020/lecture8_2020.html)
+
+**Lecture 9 (Apr 3)**
+* [Audience Analysis](https://rpubs.com/fukingwa/593936)
+
+# Tutorials
+* [Installing R packages](https://elgarteo.github.io/JMSC6116/package/install_package.html)
+* [Uploading a Shiny app](https://elgarteo.github.io/JMSC6116/shiny/shiny.html)
