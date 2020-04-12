@@ -32,3 +32,5 @@ This repository is a mirror of the JMSC6116 _Social media analytics for journali
 # Tutorials
 * [Installing R packages](https://elgarteo.github.io/JMSC6116/package/install_package.html)
 * [Uploading a Shiny app](https://elgarteo.github.io/JMSC6116/shiny/shiny.html)
+* [Setting up RSelenium](https://elgarteo.github.io/JMSC6116/shiny/selenium.html)
+
