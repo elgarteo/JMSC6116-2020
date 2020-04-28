@@ -29,8 +29,11 @@ This repository is a mirror of the JMSC6116 _Social media analytics for journali
 **Lecture 9 (Apr 3)**
 * [Audience Analysis](https://elgarteo.github.io/JMSC6116/Lecture_9-audience_analysis.html)
 
+**Lecture 10 (Apr 17)**
+* [Selenium And PDF](https://fukingwa.github.io/JMSC6116-2020/lecture10_2020.html)
+
 # Tutorials
 * [Installing R packages](https://elgarteo.github.io/JMSC6116/package/install_package.html)
 * [Uploading a Shiny app](https://elgarteo.github.io/JMSC6116/shiny/shiny.html)
 * [Setting up RSelenium](https://elgarteo.github.io/JMSC6116/selenium/selenium.html)
-
+* [Assignment 4](https://elgarteo.github.io/JMSC6116/assignment4.html)
