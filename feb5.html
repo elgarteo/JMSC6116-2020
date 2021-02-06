@@ -604,7 +604,7 @@ Is_national_paper(newspapers, text_vector)</code></pre>
 <pre><code>## Warning in if (text %in% x$name) {: the condition has length &gt; 1 and only the
 ## first element will be used</code></pre>
 <pre><code>## [1]  TRUE FALSE</code></pre>
-<p>Instead of indicating whether all three newspapers are national or not, it only returns one logical value along with a warning. It is because an if clause can only interpret one logical value at a time. But when we input a character vector into the function, <code>text %in% x$name</code> inside the if clause returns three logical values. In this case, the if clause only considers the first logical values and ignores the rest, which is essentially the same as running <code>Is_national_paper(newspapers, &quot;NYT&quot;)</code>. This is clearly not what we intended to do.</p>
+<p>Instead of indicating whether all three newspapers are national or not, it only returns two logical values along with a warning. It is because an if clause can only interpret one logical value at a time. But when we input a character vector into the function, <code>text %in% x$name</code> inside the if clause returns three logical values. In this case, the if clause only considers the first logical values and disregards the rest. Thus, <code>&quot;AppleDaily&quot;</code>, which is not in the data frame, is completely ignored, and we don’t get the <code>&quot;I don&#39;t know.&quot;</code> output that we expect. This is clearly not what we intended to do. Long story short, the function is simply not designed to handle a vector of values as its input.</p>
 <p>One solution is to use a for loop:</p>
 <pre class="r"><code>result &lt;- c() # an empty vector
 for (i in 1:length(text_vector)) {
