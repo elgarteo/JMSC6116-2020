@@ -11,7 +11,7 @@
 
 <meta name="author" content="Elgar Teo" />
 
-<meta name="date" content="2021-05-03" />
+<meta name="date" content="2021-05-11" />
 
 <title>Tips on Building Shiny Apps</title>
 
@@ -227,12 +227,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -243,7 +243,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Tips on Building Shiny Apps</h1>
 <h4 class="author">Elgar Teo</h4>
-<h4 class="date">May 03, 2021</h4>
+<h4 class="date">May 11, 2021</h4>
 
 </div>
 
@@ -353,6 +353,113 @@ output$plot &lt;- renderWordcloud2({
   wordcloud2(data)
 })</code></pre>
 <p><code>leaflet</code>’s documentation offers a very intuitive tutorial on how to insert maps in Shiny. Those who’re interested can have a read <a href="https://rstudio.github.io/leaflet/shiny.html">here</a>.</p>
+</div>
+<div id="responsive-data-loading" class="section level1">
+<h1>Responsive Data Loading</h1>
+<p>Assignment 5 requires you to construct a dashboard that analyses seven different hashtags, meaning that your Shiny app needs to at least allow the user to select which hashtag they’d like to analyse in the dashboard. The in-class example has actually demonstrated how to achieve this feature in <code>ui_part2.R</code> and <code>server_part2.R</code>, but since we didn’t have time to discuss this in the class due to time constraints, I’ll briefly talk about it here.</p>
+<p>The example here is based on the in-class sample code which is a dashboard for analysing two Twitter accounts. The same concept can be applied to creating a dashboard that can analyse multiple hashtags.</p>
+<p>Let’s look at first how the in-class sample manages to analyse one Twitter account. The following is an excerpt from <code>server_part1.R</code>:</p>
+<pre class="r"><code>server &lt;- function(input, output) {
+
+  ip_handle &lt;- readRDS(&quot;jmschku_handle.rds&quot;)
+  ip_timeline &lt;- readRDS(&quot;jmschku_timeline.rds&quot;)
+  ip_folls_data &lt;- readRDS(&quot;jmschku_folls_data.rds&quot;)
+
+  output$handle_name &lt;- renderText({
+    ip_handle$screen_name
+  })
+  ### ...more code follows...
+}</code></pre>
+<p>From the code above, we can understand that the Shiny app first loads the pre-downloaded data from the three RDS files. Afterwards, each output code block, e.g., <code>output$handle_name</code>, handles the various type of analysis and visualisation by using the data loaded, i.e., <code>ip_handle</code>, <code>ip_timeline</code> and <code>ip_folls_data</code>.</p>
+<p>To allow the user to choose which Twitter account they want to analyse, we can modify the code such that the app can load the corresponding RDS files of the selected Twitter account. This is precisely what <code>ui_part2.R</code> and <code>server_part2.R</code> do.</p>
+<p>Let’s look at <code>ui_part2.R</code> first:</p>
+<pre class="r"><code>ui &lt;- dashboardPage(
+  dashboardHeader(title = textOutput(&quot;handle_name&quot;)),
+  dashboardSidebar(
+    mainPanel(
+      uiOutput(&quot;profile_pic&quot;),
+      sliderInput(&quot;pct_followers&quot;, &quot;Percentile of its followers&#39; followers count to view:&quot;, 0, 100, 50),
+      selectInput(&quot;acc&quot;, &quot;Choose an account:&quot;, choices = c(&quot;jmschku&quot;, &quot;keithrichburg&quot;)),
+      width = 12     
+    )
+  ),
+  dashboardBody(
+    ### ...more code follows...
+  )
+)</code></pre>
+<p>Note the <code>selectInput(...)</code>. This creates a dropdown box that allows the user to pick the account they want to analyse, which in this case are either “jmschku” or “keithrichburg”.</p>
+<p>But how do we make the Shiny app loads the correct RDS file depending on what the user has selected? Refer to the <code>server_part2.R</code>:</p>
+<pre class="r"><code>server &lt;- function(input, output) {
+
+  ip_handle &lt;- reactive({
+    switch(input$acc,&quot;jmschku&quot; = readRDS(&quot;jmschku_handle.rds&quot;),&quot;keithrichburg&quot; = readRDS(&quot;keithrichburg_handle.rds&quot;))
+  })
+
+  ip_timeline &lt;- reactive({
+    switch(input$acc,&quot;jmschku&quot; = readRDS(&quot;jmschku_timeline.rds&quot;),&quot;keithrichburg&quot; = readRDS(&quot;keithrichburg_timeline.rds&quot;))
+  })
+
+  ip_folls_data &lt;- reactive({
+    switch(input$acc,&quot;jmschku&quot; = readRDS(&quot;jmschku_folls_data.rds&quot;),&quot;keithrichburg&quot; = readRDS(&quot;keithrichburg_folls_data.rds&quot;))
+  })
+
+  output$handle_name &lt;- renderText({
+    ip_handle &lt;- ip_handle()
+    ip_handle$screen_name
+  })
+  ### ...more code follows...
+}</code></pre>
+<p>Compared with <code>server_part1.R</code>, the lines that load the RDS files now look more complicated. Here is how the magic works. Let’s focus on <code>ip_handle</code> first:</p>
+<pre class="r"><code>ip_handle &lt;- reactive({
+  switch(input$acc,&quot;jmschku&quot; = readRDS(&quot;jmschku_handle.rds&quot;),&quot;keithrichburg&quot; = readRDS(&quot;keithrichburg_handle.rds&quot;))
+})</code></pre>
+<p>First of all, the value that the user has selected in the dropdown box can be accessed at <code>input$acc</code>. The <code>switch(...)</code> command is very similar to a if…else if… statement. It evaluates the value of the first argument, in this case <code>input$acc</code> which is the user-selected account name, and determine which line should be run. For instance, if the user selected “jmschku”, <code>input$acc</code> becomes “jmschku”, and thus the second argument, which is <code>&quot;jmschku&quot; = readRDS(&quot;jmschku_handle.rds&quot;)</code>, is run. This loads “jmschku_handle.rds” and assigns it as <code>ip_handle</code>.</p>
+<p>If you still do not understand, consider this if…else if… version, which does exactly the same thing:</p>
+<pre class="r"><code>ip_handle &lt;- reactive({
+  if (input$acc == &quot;jmschku&quot;) {
+    readRDS(&quot;jmschku_handle.rds&quot;)
+  } else if (input$acc == &quot;keithrichburg&quot;) {
+    readRDS(&quot;keithrichburg_handle.rds&quot;)
+  }
+})</code></pre>
+<p>In the other words, instead of being a fixed data of a specific Twitter account, <code>ip_handle</code> is a “responsive” data of whatever Twitter account selected by the user. If the user picks “jmschku”, <code>ip_handle</code> contains the account data of “jmschku”. If the user picks “keithrichburg”, <code>ip_handle</code> contains the account data of “keithrichburg”.</p>
+<p>Note the <code>reactive({...})</code>. This is required because this is a Shiny app.</p>
+<p>The same idea goes for <code>ip_timeline</code> and <code>ip_folls_data</code>.</p>
+<p><code>switch()</code> accepts unlimited number of conditions. If there are more options for the user to choose from, you can simply extend the list:</p>
+<pre class="r"><code>ip_handle &lt;- reactive({
+  switch(input$acc,
+         &quot;jmschku&quot; = readRDS(&quot;jmschku_handle.rds&quot;),
+         &quot;keithrichburg&quot; = readRDS(&quot;keithrichburg_handle.rds&quot;),
+         &quot;fukingwa&quot; = readRDS(&quot;fukingwa_handle.rds&quot;),
+         &quot;MasatoKJ&quot; = readRDS(&quot;MasatoKJ_handle.rds&quot;))
+})</code></pre>
+<p>One thing to be aware of is that we need one extra line of code in each output block:</p>
+<pre class="r"><code>server &lt;- function(input, output) {
+  ### ...more code follows...
+  output$handle_name &lt;- renderText({
+    ip_handle &lt;- ip_handle() # &lt;--------------Extra line required!
+    ip_handle$screen_name
+  })
+
+  output$statu_c &lt;- renderValueBox({
+    ip_handle &lt;- ip_handle() # &lt;--------------Extra line required!
+    valueBox(
+      ip_handle$statuses_count, &quot;Statuses Count&quot;, icon = icon(&quot;list&quot;),
+      color = &quot;yellow&quot;
+    )
+  })
+
+  output$pct_folls &lt;- renderValueBox({
+    ip_folls_data &lt;- ip_folls_data() # &lt;--------------Extra line required!
+    valueBox(
+      round(quantile(ip_folls_data$followers_count,input$pct_followers/100),2), paste(input$pct_followers,&quot; percetile of its Followers&#39; Followers count&quot;), icon = icon(&quot;list&quot;),
+      color = &quot;blue&quot;
+    )
+  })
+  ### ...more code follows...
+}</code></pre>
+<p>If you need to use the data <code>ip_handle</code> in an output block, you need to insert the line <code>ip_handle &lt;- ip_handle()</code>. If you need to use the data <code>ip_folls_data</code>, insert the line <code>ip_folls_data &lt;- ip_folls_data()</code>. A short answer to why this is required because <code>ip_handle</code>, <code>ip_timeline</code> and <code>ip_folls_data</code> are “responsive” data that reacts to user input, and this extra line of code updates the data to reflect changes in the user input.</p>
+<p>From the explanation above, we now know how to load data in response to user input. You can apply the same concept in constructing your assignment 5. More specifically, you need to download and save the tweets of the seven hashtags as RDS files, and then allow the Shiny app to read any of these files based on user input.</p>
 <hr />
 </div>
 
